@@ -1,0 +1,425 @@
+package main
+
+import (
+	"database/sql"
+	"encoding/json"
+	"fmt"
+
+	_ "github.com/go-sql-driver/mysql"
+)
+
+func main() {
+	// Db in main function
+	username := "root"
+	password := "Scermlind123"
+	host := "mydb-urufit.caoef2qeooff.ap-south-1.rds.amazonaws.com"
+	dbname := "urufit"
+	connectString := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", username, password, host, dbname)
+
+	//**************** USer_Info**************************************************************************
+	fmt.Println("\n************************************************** User_info ********************************************\n")
+	fmt.Println("\nUser_info for Dina\n")
+	var User1json map[string]string
+	User1json = getuserinfo("dine7952@gmail.com", connectString)
+	a1, _ := json.Marshal(User1json)
+	b1 := string(a1)
+	fmt.Println(b1)
+
+	fmt.Println("\n USer_Info for Indu\n")
+	var User2json map[string]string
+	User2json = getuserinfo("indumathiperiyasamy333@gmail.com", connectString)
+	a2, _ := json.Marshal(User2json)
+	b2 := string(a2)
+	fmt.Println(b2)
+
+	fmt.Println("\n User_Info for Jaga\n")
+	var User3json map[string]string
+	User3json = getuserinfo("jagadeesh@urufit.in", connectString)
+	a3, _ := json.Marshal(User3json)
+	b3 := string(a3)
+	fmt.Println(b3)
+
+	fmt.Println("\nUser_info for Murugesh\n")
+	var User4json map[string]string
+	User4json = getuserinfo("murugesh@urufit.in", connectString)
+	a4, _ := json.Marshal(User4json)
+	b4 := string(a4)
+	fmt.Println(b4)
+
+	fmt.Println("\nUser_info for Teja\n")
+	var User5json map[string]string
+	User5json = getuserinfo("teja.prakash@htic.iitm.ac.in", connectString)
+	a5, _ := json.Marshal(User5json)
+	b5 := string(a5)
+	fmt.Println(b5)
+
+	fmt.Println("\nUser_info for Rohit\n")
+	var User6json map[string]string
+	User6json = getuserinfo("rohit@gmail.com", connectString)
+	a6, _ := json.Marshal(User6json)
+	b6 := string(a6)
+	fmt.Println(b6)
+
+	fmt.Println("\nUser_info for Priya\n")
+	var User7json map[string]string
+	User7json = getuserinfo("priya.lifecool@gmail.com", connectString)
+	a7, _ := json.Marshal(User7json)
+	b7 := string(a7)
+	fmt.Println(b7)
+
+	fmt.Println("\nUser_info for Pravin\n")
+	var User8json map[string]string
+	User8json = getuserinfo("pravink@urufit.in", connectString)
+	a8, _ := json.Marshal(User8json)
+	b8 := string(a8)
+	fmt.Println(b8)
+
+	fmt.Println("\nUser_info for Sudheer\n")
+	var User9json map[string]string
+	User9json = getuserinfo("sudheerpendyala7@gmail.com", connectString)
+	a9, _ := json.Marshal(User9json)
+	b9 := string(a9)
+	fmt.Println(b9)
+
+	fmt.Println("\nUser_info for NeelKanth\n")
+	var User10json map[string]string
+	User10json = getuserinfo("neelkanthraju@gmail.com", connectString)
+	a10, _ := json.Marshal(User10json)
+	b10 := string(a10)
+	fmt.Println(b10)
+
+	fmt.Println("\nUser_info for Abi\n")
+	var User11json map[string]string
+	User11json = getuserinfo("abimai1995@gmail.com", connectString)
+	a11, _ := json.Marshal(User11json)
+	b11 := string(a11)
+	fmt.Println(b11)
+
+	fmt.Println("\nUser_info for Dina\n")
+	var User12json map[string]string
+	User12json = getuserinfo("codefordina@gmail.com", connectString)
+	a12, _ := json.Marshal(User12json)
+	b12 := string(a12)
+	fmt.Println(b12)
+
+	fmt.Println("\nUser_info for Swaathi\n")
+	var User13json map[string]string
+	User13json = getuserinfo("swaathi.venkat@gmail.com", connectString)
+	a13, _ := json.Marshal(User13json)
+	b13 := string(a13)
+	fmt.Println(b13)
+
+	fmt.Println("\nUser_info for shreenandhini\n")
+	var User14json map[string]string
+	User14json = getuserinfo("shreenandhini24@gmail.com", connectString)
+	a14, _ := json.Marshal(User14json)
+	b14 := string(a14)
+	fmt.Println(b14)
+
+	fmt.Println("\nUser_info for Vignesh\n")
+	var User15json map[string]string
+	User15json = getuserinfo("evignesh@gmail.com", connectString)
+	a15, _ := json.Marshal(User15json)
+	b15 := string(a15)
+	fmt.Println(b15)
+
+	//************************************************************************************************************************************************
+	fmt.Println("\n******************************************** HR *********************************************************************\n")
+	fmt.Println("\n HR_info for Dina\n")
+	var hrr1json map[string]string
+	hrr1json = gethrinfo("dine7952@gmail.com", connectString)
+	c1, _ := json.Marshal(hrr1json)
+	d1 := string(c1)
+	fmt.Println(d1)
+
+	fmt.Println("\n HR_info for Jaga\n")
+	var hrr2json map[string]string
+	hrr2json = gethrinfo("jaggu1139@gmail.com", connectString)
+	c2, _ := json.Marshal(hrr2json)
+	d2 := string(c2)
+	fmt.Println(d2)
+
+	fmt.Println("\n HR_info for Murugesh\n")
+	var hrr3json map[string]string
+	hrr3json = gethrinfo("murugesh@urufit.in", connectString)
+	c3, _ := json.Marshal(hrr3json)
+	d3 := string(c3)
+	fmt.Println(d3)
+
+	fmt.Println("\n HR_info for Teja\n")
+	var hrr4json map[string]string
+	hrr4json = gethrinfo("teja.prakash@htic.iitm.ac.in", connectString)
+	c4, _ := json.Marshal(hrr4json)
+	d4 := string(c4)
+	fmt.Println(d4)
+
+	fmt.Println("\n HR_info for Priya\n")
+	var hrr5json map[string]string
+	hrr5json = gethrinfo("priya.lifecool@gmail.com", connectString)
+	c5, _ := json.Marshal(hrr5json)
+	d5 := string(c5)
+	fmt.Println(d5)
+
+
+	// *************************************************************************************
+	fmt.Println("\n **************************************** HRV **********************************************************************\n")
+
+	fmt.Println("\nHRV_info for Dina\n")
+	var hrvv1json map[string]string
+	hrvv1json = gethrvinfo("dine7952@gmail.com", connectString)
+	e1, _ := json.Marshal(hrvv1json)
+	f1 := string(e1)
+	fmt.Println(f1)
+
+	fmt.Println("\n HRV_info for Jaga\n")
+	var hrvv2json map[string]string
+	hrvv2json =gethrvinfo("jaggu1139@gmail.com", connectString)
+	e2, _ := json.Marshal(hrvv2json)
+	f2 := string(e2)
+	fmt.Println(f2)
+
+	fmt.Println("\nHRV_info for Murugesh\n")
+	var hrvv3json map[string]string
+	hrvv3json = gethrvinfo("murugesh@urufit.in", connectString)
+	e3, _ := json.Marshal(hrvv3json)
+	f3 := string(e3)
+	fmt.Println(f3)
+
+	fmt.Println("\nHRV_info for Teja\n")
+	var hrvv4json map[string]string
+	hrvv4json = gethrvinfo("teja.prakash@htic.iitm.ac.in", connectString)
+	e4, _ := json.Marshal(hrvv4json)
+	f4 := string(e4)
+	fmt.Println(f4)
+
+	fmt.Println("\nHRV_info for Priya\n")
+	var hrvv5json map[string]string
+	hrvv5json = gethrvinfo("priya.lifecool@gmail.com", connectString)
+	e5, _ := json.Marshal(hrvv5json)
+	f5 := string(e5)
+	fmt.Println(f5)
+
+	//*************************************************************************************************************************************
+
+	fmt.Println("\n************************************* Sleep ***********************************************************\n")
+	fmt.Println("\n Sleep_info for Murugesh\n")
+	var sleepjson map[string]string
+	sleepjson = getsleepinfo("murugesh@urufit.in", connectString)
+	g, _ := json.Marshal(sleepjson)
+	h := string(g)
+	fmt.Println(h)
+	//************************************************************************************************************************************
+	fmt.Println("\n ************************************** step_count *****************************************************\n")
+	fmt.Println("\n Step_count_info for Jaga \n")
+	var stepjson map[string]string
+	stepjson = getstepinfo("jaggu1139@gmail.com", connectString)
+	i, _ := json.Marshal(stepjson)
+	j := string(i)
+	fmt.Println(j)
+
+	fmt.Println("\n Step_count_info for Dina\n")
+	var step1json map[string]string
+	step1json =getstepinfo("dine7952@gmail.com", connectString)
+	i1, _ := json.Marshal(step1json)
+	j1 := string(i1)
+	fmt.Println(j1)
+
+	fmt.Println("\n Step_count_info for Murugesh \n")
+	var step2json map[string]string
+	step2json = getstepinfo("murugesh@urufit.in", connectString)
+	i2, _ := json.Marshal(step2json)
+	j2 := string(i2)
+	fmt.Println(j2)
+
+	fmt.Println("\n Step_count_info for Teja \n")
+	var step3json map[string]string
+	step3json = getstepinfo("teja.prakash@htic.iitm.ac.in", connectString)
+	i3, _ := json.Marshal(step3json)
+	j3 := string(i3)
+	fmt.Println(j3)
+
+	fmt.Println("\n Step_count_info for Priya \n")
+	var step4json map[string]string
+	step4json = getstepinfo("priya.lifecool@gmail.com", connectString)
+	i4, _ := json.Marshal(step4json)
+	j4 := string(i4)
+	fmt.Println(j4)
+
+}
+
+//***************************************************************************************************************************************
+// user_info
+
+func getuserinfo(surname string, connectString string) map[string]string {
+	var id, Name, Age, Gender, Height, Weight, Email, Number, BMI, RMR string
+	var UserMap map[string]string
+	UserMap = make(map[string]string)
+	db, err := sql.Open("mysql", connectString)
+	if err != nil {
+		panic(err.Error())
+	}
+	queryStr := fmt.Sprintf("select * from user_info where email = '%s' limit 1", surname)
+	rows, err := db.Query(fmt.Sprintf(queryStr))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&id, &Name, &Age, &Gender, &Height, &Weight, &Email, &Number, &BMI, &RMR)
+		UserMap["id"] = id
+		UserMap["Name"] = Name
+		UserMap["Age"] = Age
+		UserMap["Gender"] = Gender
+		UserMap["Height"] = Height
+		UserMap["Weight"] = Weight
+		UserMap["Email"] = Email
+		UserMap["Number"] = Number
+		UserMap["BMI"] = BMI
+		UserMap["RMR"] = RMR
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	return UserMap
+}
+
+// hr
+
+func gethrinfo(surname string, connectString string) map[string]string {
+	var id, UserId, Time, Date, Activity, HR, HR_IQI string
+	var hrrMap map[string]string
+	hrrMap = make(map[string]string)
+	db, err := sql.Open("mysql", connectString)
+	if err != nil {
+		panic(err.Error())
+	}
+	queryStr := fmt.Sprintf("select * from HR where UserId = '%s' limit 1", surname)
+
+	rows, err := db.Query(fmt.Sprintf(queryStr))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&id, &UserId, &Time, &Date, &Activity, &HR, &HR_IQI)
+		hrrMap["id"] = id
+		hrrMap["UserId"] = UserId
+		hrrMap["Time"] = Time
+		hrrMap["Date"] = Date
+		hrrMap["Activity"] = Activity
+		hrrMap["HR"] = HR
+		hrrMap["HR_IQI"] = HR_IQI
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	return hrrMap
+}
+
+//hrv function
+
+func gethrvinfo(surname string, connectString string) map[string]string {
+	var id, UserId, Time, Date, Running_Counter, HRV, HR_IQI string
+	var hrvvMap map[string]string
+	hrvvMap = make(map[string]string)
+	db, err := sql.Open("mysql", connectString)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	queryStr := fmt.Sprintf("select * from HRV where UserId = '%s' limit 1", surname)
+
+	rows, err := db.Query(fmt.Sprintf(queryStr))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&id, &UserId, &Time, &Date, &Running_Counter, &HRV, &HR_IQI)
+		hrvvMap["id"] = id
+		hrvvMap["UserId"] = UserId
+		hrvvMap["Time"] = Time
+		hrvvMap["Date"] = Date
+		hrvvMap["Running_Counter"] = Running_Counter
+		hrvvMap["HRV"] = HRV
+		hrvvMap["HR_IQI"] = HR_IQI
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	return hrvvMap
+}
+
+// sleep
+func getsleepinfo(surname string, connectString string) map[string]string {
+	var id, UserId, Date, Total_time, Deep_time, Lite_time, Start_time, End_time, Target, Quality string
+	var sleepMap map[string]string
+	sleepMap = make(map[string]string)
+	db, err := sql.Open("mysql", connectString)
+	if err != nil {
+		panic(err.Error())
+	}
+	queryStr := fmt.Sprintf("select * from sleep where UserId = '%s' limit 1", surname)
+	rows, err := db.Query(fmt.Sprintf(queryStr))
+	if err != nil {
+		panic(err.Error())
+	}
+	for rows.Next() {
+		err = rows.Scan(&id, &UserId, &Date, &Total_time, &Deep_time, &Lite_time, &Start_time, &End_time, &Target, &Quality)
+		sleepMap["id"] = id
+		sleepMap["UserId"] = UserId
+		sleepMap["Date"] = Date
+		sleepMap["Total_time"] = Total_time
+		sleepMap["Deep_time"] = Deep_time
+		sleepMap["Lite_time"] = Lite_time
+		sleepMap["Start_time"] = Start_time
+		sleepMap["End_time"] = End_time
+		sleepMap["Target"] = Target
+		sleepMap["Quality"] = Quality
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	return sleepMap
+}
+
+// step
+func getstepinfo(surname string, connectString string) map[string]string {
+	var id, UserId, Time, Date, Activity, Walk, Run, Bike, Walk_distance, Run_distance, Calories_burnt, HR_IQI string
+	var stepMap map[string]string
+	stepMap = make(map[string]string)
+	db, err := sql.Open("mysql", connectString)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	queryStr := fmt.Sprintf("select * from step_count where UserId = '%s' limit 1", surname)
+
+	rows, err := db.Query(fmt.Sprintf(queryStr))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&id, &UserId, &Time, &Date, &Activity, &Walk, &Run, &Bike, &Walk_distance, &Run_distance, &Calories_burnt, &HR_IQI)
+		stepMap["id"] = id
+		stepMap["UserId"] = UserId
+		stepMap["Time"] = Time
+		stepMap["Date"] = Date
+		stepMap["Activity"] = Activity
+		stepMap["Walk"] = Walk
+		stepMap["Run"] = Run
+		stepMap["Bike"] = Bike
+		stepMap["Walk_distance"] = Walk_distance
+		stepMap["Run_distance"] = Run_distance
+		stepMap["Calories_burnt"] = Calories_burnt
+		stepMap["HR_IQI"] = HR_IQI
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	return stepMap
+}
