@@ -58,7 +58,7 @@ case "TOTALSLEEP":
            }
              defer db.Close()
 
-case "LITESLEEP":
+ case "LITESLEEP":
               rows4,err4:=db.Query("select Lite_time from Sleep where date =?",Date)
             if err4 != nil{
                  panic(err4)
