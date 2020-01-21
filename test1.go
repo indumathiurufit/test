@@ -6,7 +6,7 @@ import (
         _ "github.com/go-sql-driver/mysql"
 )
 func main(){
-  fmt.Println("Connected")
+ // fmt.Println("Connected")
   db,err:=sql.Open("mysql","root:Root@123@tcp(127.0.0.1:3306)/userinfo")
 if err !=nil{
     panic(err.Error())
