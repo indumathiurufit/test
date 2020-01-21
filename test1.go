@@ -1,3 +1,4 @@
+//without separate function
 package main
 import (
         "fmt"
