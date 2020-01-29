@@ -34,6 +34,8 @@ func handle(ctx context.Context, event events.APIGatewayProxyRequest) (events.AP
 		c.DB = db
 	}
 	defer c.DB.Close()
+	
+	
 func (ms *dbStorage) Close() error {
 	return ms.db.Close()
 }
@@ -65,7 +67,7 @@ func (ms *dbStorage) deleteClient(a string) error {
 func (ms *dbStorage) listUsers() (interface{}, error) {
 	return nil, nil
 }
-
+// contact & user # left join 
 func (ms *dbStorage) getUser(email string) (*atium.UserInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
 		"SELECT U.id, U.name, C.email, U.dob, U.created_at, C.address,",
