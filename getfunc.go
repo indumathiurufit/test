@@ -1,138 +1,201 @@
 
-// 1.contact
-func getcontact(mail string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from contact where email='%s'", mail))
+// 1.User
+func (ms *dbStorage) getUser(email string) (*atium.UserInfo, error) {
+	qs := fmt.Sprintf("%s %s %s %s",
+		"SELECT U.id, U.name, C.email, U.dob, U.gender, U.created_at, C.address,",
+		"C.primary_ph, C.secondary_ph from user U",
+		"LEFT JOIN contact C ON C.id = U.contact_id",
+		"WHERE email = ?")
+
+	var address string
+	var id int64
+	u := atium.UserInfo{}
+	row := ms.db.QueryRow(qs, email)
+
+	err := row.Scan(&id, &u.Name, &u.Email, &u.Dob, &u.Gender, &u.CreatedAt,
+		&address, &u.PrimaryPh, &u.SecondaryPh)
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("user not found: %v", err)
 	}
-	contactInfo := []string{"", "", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2], &userInfo[3])
-		if err != nil {
-			return nil, err
-		}
+	err = json.Unmarshal([]byte(address), &u.Address)
+	if err != nil {
+		fmt.Printf("unmarshalling address failed: %v", err)
+		fmt.Println(u.Address)
 	}
-	err = rows.Err()
-	return contactInfo, err
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
+		return nil, fmt.Errorf("err getting stats: %v", err)
+	}
+	u.Stats = *stats
+	return &u, err
 }
 
-//2.Client
-func getclient(contact_id string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from client where email='%s'", contact_id))
+
+// 2.Client
+func (ms *dbStorage) getclient(email string) (*atium.clientInfo, error) {
+	qs := fmt.Sprintf("%s %s %s %s",
+	"select L.id,L.name,C.email, L.services,L.description,L.created_at,L.modified_at,C.address,",
+ "C.primary_ph,C.secondary_ph from client L",
+ "LEft JOIN contact C ON C.id= L.contact_id",
+ "where email = ?")
+
+ var address string
+ var services string
+ var description string
+	var id int64
+	l := atium.clientInfo{}
+	row := ms.db.QueryRow(qs, email)
+
+	err := row.Scan(&id,&l.Name,&l.email,&services,&description,&l.created_at,&l.modified_at,&address,
+ &l.primary_ph,&l.secondary_ph)
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("client not found: %v", err)
 	}
-	clientInfo := []string{"", "", "", "", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2], &userInfo[3], &userInfo[4], &userInfo[5])
-		if err != nil {
-			return nil, err
-		}
+	err = json.Unmarshal([]byte(Address), &l.Address)
+	if err != nil {
+		fmt.Printf("unmarshalling address failed: %v", err)
+		fmt.Println(l.Address)
 	}
-	err = rows.Err()
-	return clientInfo, err
+
+  err = json.Unmarshal([]byte( services), &l.services)
+	if err != nil {
+		fmt.Printf("unmarshalling  services failed: %v", err)
+		fmt.Println(l.services)
+	}
+
+  err = json.Unmarshal([]byte(description), &l.description)
+	if err != nil {
+		fmt.Printf("unmarshalling description failed: %v", err)
+		fmt.Println(l.description)
+	}
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
+		return nil, fmt.Errorf("err getting stats: %v", err)
+	}
+	l.Stats = *stats
+	return &l, err
 }
 
 //3.service
-func getservice(string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from service where email='%s'"))
+func (ms *dbStorage) getservice(email string) (*atium.serviceInfo, error) {
+	qs := fmt.Sprintf("%s %s %s %s",
+	"select S.id,C.client.id,S.name,S.description,S.price,",
+  "C.enabledAt,C.enabled from service S",
+  "LEFT JOIN client_service C ON C.service_id = S.id",
+  "WHERE email = ?")
+
+	var description string
+	var id int64
+	u := atium.serviceInfo{}
+	row := ms.db.QueryRow(qs, email)
+
+	err := row.Scan(&id,&u.client_id,&u.name,&description,&u.price,
+  &u.enabledAt,&u.enabled )
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("service not found: %v", err)
 	}
-	serviceInfo := []string{"", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2])
-		if err != nil {
-			return nil, err
-		}
+	err = json.Unmarshal([]byte(description), &u.description)
+	if err != nil {
+		fmt.Printf("unmarshalling description failed: %v", err)
+		fmt.Println(u.description)
 	}
-	err = rows.Err()
-	return serviceInfo, err
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
+		return nil, fmt.Errorf("err getting stats: %v", err)
+	}
+	u.Stats = *stats
+	return &u, err
 }
 
-//4.user
-func getuser(contact_id string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from user where email='%s'", contact_id))
+//4.client_service
+func (ms *dbStorage) getclient_service(email string) (*atium.client_serviceInfo, error) {
+	qs := fmt.Sprintf("%s %s %s %s",
+	"select C.id,C.name,C.description,C.services,C.created_at,C.modified_at,",
+  "S.enabledAt,S.enabled from client_service S",
+  "LEft JOIN client C ON C.id = S.client_id",
+  "WHERE email = ?")
+
+	var description string
+  var services string
+	var id int64
+	u := atium.client_serviceInfo{}
+	row := ms.db.QueryRow(qs, email)
+
+	err := row.Scan(&id,&u.name,&description,&services,&u.created_at,&u.modified_at,
+  &u.enabledAt,&u.enabled)
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("client_service not found: %v", err)
 	}
-	userInfo := []string{"", "", "", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2], &userInfo[3], &userInfo[4])
-		if err != nil {
-			return nil, err
-		}
+	err = json.Unmarshal([]byte(description), &u.description)
+	if err != nil {
+		fmt.Printf("unmarshalling description failed: %v", err)
+		fmt.Println(u.description)
 	}
-	err = rows.Err()
-	return userInfo, err
+  err = json.Unmarshal([]byte(services), &u.services)
+	if err != nil {
+		fmt.Printf("unmarshalling services failed: %v", err)
+		fmt.Println(u.services)
+	}
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
+		return nil, fmt.Errorf("err getting stats: %v", err)
+	}
+	u.Stats = *stats
+	return &u, err
 }
 
-//5.client_service
-func getclient_service(client_id string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from client_service where email='%s'", client_id))
+//5.medical
+
+func (ms *dbStorage) getmedical(email string) (*atium.medicalInfo, error) {
+	qs := fmt.Sprintf("%s %s %s %s",
+"select M.id,U.name,U.gender,U.contact_id,U.Dob,",
+"U.created_at,M.medical_record from medical M",
+"LEFT JOIN user U ON U.id= M.user_id",
+"WHERE email = ?")
+	var medical_record string
+	var id int64
+	x := atium.medicalInfo{}
+	row := ms.db.QueryRow(qs, email)
+
+	err := row.Scan(&id,&x.name,&x.gender,&x.contact_id,&x.Dob,
+  &x.created_at,&medical_record)
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("medical_record not found: %v", err)
 	}
-	client_serviceInfo := []string{"", "", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2], &userInfo[3])
-		if err != nil {
-			return nil, err
-		}
+	err = json.Unmarshal([]byte(medical_record), &x.medical_record)
+	if err != nil {
+		fmt.Printf("unmarshalling medical_record failed: %v", err)
+		fmt.Println(x.medical_record)
 	}
-	err = rows.Err()
-	return client_serviceInfo, err
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
+		return nil, fmt.Errorf("err getting stats: %v", err)
+	}
+	x.Stats = *stats
+	return &x, err
 }
 
-//6.medical
-func getmedical(user_id string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from medical where email='%s'", user_id))
-	if err != nil {
-		panic(err.Error())
-	}
-	medicalInfo := []string{"", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1])
-		if err != nil {
-			return nil, err
-		}
-	}
-	err = rows.Err()
-	return medicalInfo, err
-}
+//6.survey
+func (ms *dbStorage) getsurvey(email string) (*atium.surveyInfo, error) {
+	qs := fmt.Sprintf("%s %s %s %s",
+	"select S.id,U.name,U.gender,U.dob,U.created_at,",
+  "S.client_form_map_id,S.form_entry_id from survey S"
+  "LEFT JOIN user U ON U.id= S.user_id",
+  "WHERE email = ?")
 
-//7.activity
-func getactivity(string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from activity where email='%s'"))
-	if err != nil {
-		panic(err.Error())
-	}
-	activityInfo := []string{"", "", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2], &userInfo[3])
-		if err != nil {
-			return nil, err
-		}
-	}
-	err = rows.Err()
-	return activityInfo, err
-}
+	var id int64
+	u := atium.surveyInfo{}
+	row := ms.db.QueryRow(qs, email)
 
-//8.`user_activity
-func getuser_activity(user_id string) ([]string, error) {
-	rows, err := c.DB.Query(fmt.Sprintf("select * from user_activity where email='%s'", user_id))
+	err := row.Scan(&u.id,&u.name,&u.gender,&u.dob,&u.created_at,
+  &u.client_form_map_id,&u.form_entry_id)
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("survey not found: %v", err)
 	}
-	user_activityInfo := []string{"", "", "", ""}
-	for rows.Next() {
-		err = rows.Scan(&userInfo[0], &userInfo[1], &userInfo[2], &userInfo[3])
-		if err != nil {
-			return nil, err
-		}
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
+		return nil, fmt.Errorf("err getting stats: %v", err)
 	}
-	err = rows.Err()
-	return user_activityInfo, err
+	u.Stats = *stats
+	return &u, err
 }
-
-//9.client_form
