@@ -74,10 +74,10 @@ func (ms *dbStorage) getclient(email string) (*atium.clientInfo, error) {
 //3.service
 func (ms *dbStorage) getservice(email string) (*atium.serviceInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
-	"select S.id,C.client.id,S.name,S.description,S.price,",
-  "C.enabledAt,C.enabled from service S",
-  "LEFT JOIN client_service C ON C.service_id = S.id",
-  "WHERE email = ?")
+			  "select S.id,C.client.id,S.name,S.description,S.price,",
+			  "C.enabledAt,C.enabled from service S",
+			  "LEFT JOIN client_service C ON C.service_id = S.id",
+			  "WHERE email = ?")
 
 	var description string
 	var id int64
@@ -85,7 +85,7 @@ func (ms *dbStorage) getservice(email string) (*atium.serviceInfo, error) {
 	row := ms.db.QueryRow(qs, email)
 
 	err := row.Scan(&id,&u.client_id,&u.name,&description,&u.price,
-  &u.enabledAt,&u.enabled )
+			&u.enabledAt,&u.enabled)
 	if err != nil {
 		return nil, fmt.Errorf("service not found: %v", err)
 	}
