@@ -32,20 +32,19 @@ func (ms *dbStorage) getUser(email string) (*atium.UserInfo, error) {
 // 2.Client
 func (ms *dbStorage) getclient(email string) (*atium.clientInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
-	"select L.id,L.name,C.email, L.services,L.description,L.created_at,L.modified_at,C.address,",
- "C.primary_ph,C.secondary_ph from client L",
- "LEft JOIN contact C ON C.id= L.contact_id",
- "where email = ?")
-
- var address string
- var services string
- var description string
+	        "select L.id,L.name,C.email, L.services,L.description,L.created_at,L.modified_at,C.address,",
+                "C.primary_ph,C.secondary_ph from client L",
+                "LEft JOIN contact C ON C.id= L.contact_id",
+                "where email = ?")
+	var address string
+	var services string
+	var description string
 	var id int64
 	l := atium.clientInfo{}
 	row := ms.db.QueryRow(qs, email)
 
 	err := row.Scan(&id,&l.Name,&l.email,&services,&description,&l.created_at,&l.modified_at,&address,
- &l.primary_ph,&l.secondary_ph)
+			&l.primary_ph,&l.secondary_ph)
 	if err != nil {
 		return nil, fmt.Errorf("client not found: %v", err)
 	}
@@ -54,14 +53,12 @@ func (ms *dbStorage) getclient(email string) (*atium.clientInfo, error) {
 		fmt.Printf("unmarshalling address failed: %v", err)
 		fmt.Println(l.Address)
 	}
-
-  err = json.Unmarshal([]byte( services), &l.services)
+	err = json.Unmarshal([]byte(services), &l.services)
 	if err != nil {
 		fmt.Printf("unmarshalling  services failed: %v", err)
 		fmt.Println(l.services)
 	}
-
-  err = json.Unmarshal([]byte(description), &l.description)
+	err = json.Unmarshal([]byte(description), &l.description)
 	if err != nil {
 		fmt.Printf("unmarshalling description failed: %v", err)
 		fmt.Println(l.description)
