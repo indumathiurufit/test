@@ -363,20 +363,19 @@ func (ms *dbStorage) getclient_activity(email string) (*atium.client_activityInf
 }
 
 //13.client_user
-func (ms *dbStorage) getclient_user(email string) (*atium.client_userInfo, error) {
+func (ms *dbStorage) getclient_user(email string) (*atium.client_userInfo,error) {
 	qs := fmt.Sprintf("%s %s %s %s",
-"select U.id,U.client_id,U.User_id,C.name,C.description,C.contact_id,",
-"C.service,C.created_at,C.modified_at from client_user U",
-"LEFT JOIN client C ON C.id = U.client_id",
-"WHERE email = ?")
+			  "select U.id,U.client_id,U.User_id,C.name,C.description,C.contact_id,",
+			  "C.service,C.created_at,C.modified_at from client_user U",
+			  "LEFT JOIN client C ON C.id = U.client_id",
+			  "WHERE email = ?")
 	var description string
 	var services string
 	var id int64
 	x := atium.client_userInfo{}
 	row := ms.db.QueryRow(qs, email)
 
-	err := row.Scan(&id,&x.client_id,&x.User_id,&x.name,&description,&x.contact_id,",
-	"&service,&x.created_at,&x.modified_at)
+	err := row.Scan(&id,&x.client_id,&x.User_id,&x.name,&description,&x.contact_id,&service,&x.created_at,&x.modified_at)
 	if err != nil {
 		return nil, fmt.Errorf("client_user not found: %v", err)
 	}
@@ -404,13 +403,11 @@ func (ms *dbStorage) getconsumption(email string) (*atium.consumptionInfo, error
 		 "select C.id,C.food_id,C.calories_in,C.protein,C.carbs,",
 		 "C.fat,C.entry_at from consumption C",
 		 "WHERE email = ?")
-
-  var id int64
+	var id int64
 	u := atium.consumptionInfo{}
 	row := ms.db.QueryRow(qs, email)
 
-	err := row.Scan(&id,&u.id,&u.food_id,&u.calories_in,&u.protein,&u.carbs,",
-	&u.fat,&u.entry_at)
+	err := row.Scan(&id,&u.id,&u.food_id,&u.calories_in,&u.protein,&u.carbs,&u.fat,&u.entry_at)
 	if err != nil {
 		return nil, fmt.Errorf("consumption not found: %v", err)
 	}
@@ -425,17 +422,16 @@ func (ms *dbStorage) getconsumption(email string) (*atium.consumptionInfo, error
 //15.user_consumption
 func (ms *dbStorage) getuser_consumption(email string) (*atium.user_consumptionInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
-"select U.id,U.user_id,U.consumption_id, C.food_id,C.calories_in,",
-"C.protein,C.carbs,C.fat,C.entry_at from consumption C", 
-"LEFT JOIN user_consumption U on U.consumption_id = C.id ",
-"WHERE email = ?")
+			  "select U.id,U.user_id,U.consumption_id, C.food_id,C.calories_in,",
+			  "C.protein,C.carbs,C.fat,C.entry_at from consumption C", 
+			  "LEFT JOIN user_consumption U on U.consumption_id = C.id ",
+			  "WHERE email = ?")
 
 	var id int64
 	x := atium.user_consumptionInfo{}
 	row := ms.db.QueryRow(qs, email)
 
-	err := row.Scan(&id,&x.user_id,&x.consumption_id,&x.food_id,&x.calories_in,
-	&x.protein,&x.carbs,&x.fat,&x.entry_at)
+	err := row.Scan(&id,&x.user_id,&x.consumption_id,&x.food_id,&x.calories_in,&x.protein,&x.carbs,&x.fat,&x.entry_at)
 	if err != nil {
 		return nil, fmt.Errorf("user_consumption not found: %v", err)
 	}
@@ -451,21 +447,20 @@ func (ms *dbStorage) getuser_consumption(email string) (*atium.user_consumptionI
 //16.user_stats
 func (ms *dbStorage) getuser_stats(email string) (*atium.user_statsInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
-"select U.id,U.user_id,U.stats_id,S.entry_at,S.height,S.weight,S.arms,S.chest,",
-"S.waist,S.hips,S.thighs,S.calves from user_stats U",
-"LEft JOIN stats S ON S.id = U.stats_id",
-"WHERE email = ?")
+			  "select U.id,U.user_id,U.stats_id,S.entry_at,S.height,S.weight,S.arms,S.chest,",
+			  "S.waist,S.hips,S.thighs,S.calves from user_stats U",
+			  "LEft JOIN stats S ON S.id = U.stats_id",
+			  "WHERE email = ?")
 
 	var id int64
 	x := atium.user_statsInfo{}
 	row := ms.db.QueryRow(qs, email)
 
-	err := row.Scan(&id,&x.user_id,&x.stats_id,&x.entry_at,&x.height,&x.weight,&x.arms,&x.chest,
-	&x.waist,&x.hips,&x.thighs,&x.calves)
+	err := row.Scan(&id,&x.user_id,&x.stats_id,&x.entry_at,&x.height,&x.weight,&x.arms,&x.chest,&x.waist,&x.hips,&x.thighs,&x.calves)
 	if err != nil {
 		return nil, fmt.Errorf("user_stats not found: %v", err)
 	}
- stats, err := getLatestStats(ms.db, id)
+	stats, err := getLatestStats(ms.db, id)
 	if err != nil {
 		return nil, fmt.Errorf("err getting stats: %v", err)
 	}
