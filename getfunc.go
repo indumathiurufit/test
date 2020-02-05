@@ -305,47 +305,47 @@ func (ms *dbStorage) getclient_form(email string) (*atium.client_formInfo, error
 			  "WHERE email = ?")
 	var description string
 	var services string
-var id int64
-u := atium.client_formInfo{}
-row := ms.db.QueryRow(qs, email)
-
-err := row.Scan(&id,&u.name,&u.contact_id,&u.client_id,&description,&services,&u.created_at,&u.modified_at,",
-"&u.form_name,&u.form_label)
-if err != nil {
+	var id int64
+	u := atium.client_formInfo{}
+	row := ms.db.QueryRow(qs, email)
+	
+	err := row.Scan(&id,&u.name,&u.contact_id,&u.client_id,&description,&services,&u.created_at,&u.modified_at,
+			&u.form_name,&u.form_label)
+	if err != nil {
 	return nil, fmt.Errorf("client_form not found: %v", err)
-}
-err = json.Unmarshal([]byte(description), &u.description)
-if err != nil {
+	}
+	err = json.Unmarshal([]byte(description), &u.description)
+	if err != nil {
 	fmt.Printf("unmarshalling description failed: %v", err)
 	fmt.Println(u.description)
-}
-err = json.Unmarshal([]byte(services), &u.services)
-if err != nil {
+	}
+	err = json.Unmarshal([]byte(services), &u.services)
+	if err != nil {
 	fmt.Printf("unmarshalling services failed: %v", err)
 	fmt.Println(u.services)
-}
-stats, err := getLatestStats(ms.db, id)
-if err != nil {
+	}
+	stats, err := getLatestStats(ms.db, id)
+	if err != nil {
 	return nil, fmt.Errorf("err getting stats: %v", err)
-}
-u.Stats = *stats
-return &u, err
+	}
+	u.Stats = *stats
+	return &u, err
 }
 
 //12.client_activity
-func (ms *dbStorage) getclient_activity(email string) (*atium.client_activityInfo, error) {
+func (ms *dbStorage) getclient_activity(email string) (*atium.client_activityInfo,error) {
 	qs := fmt.Sprintf("%s %s %s %s",
-"select C.id,C.client_id,C.activity_id,A.name,",
-"A.description,A.duration,A.cost from client_activity C",
-"LEFT JOIN activity A ON A.id = C.activity_id",
-"WHERE email = ?")
+			  "select C.id,C.client_id,C.activity_id,A.name,",
+			  "A.description,A.duration,A.cost from client_activity C",
+			  "LEFT JOIN activity A ON A.id = C.activity_id",
+			  "WHERE email = ?")
+	
 	var description string
 	var id int64
 	x := atium.client_activityInfo{}
 	row := ms.db.QueryRow(qs, email)
 
-	err := row.Scan(&id,&x.client_id,&x.activity_id,&x.name,",
-	"&x.description,&x.duration,&x.cost)
+	err := row.Scan(&id,&x.client_id,&x.activity_id,&x.name,&x.description,&x.duration,&x.cost)
 	if err != nil {
 		return nil, fmt.Errorf("client_activity not found: %v", err)
 	}
@@ -361,6 +361,7 @@ func (ms *dbStorage) getclient_activity(email string) (*atium.client_activityInf
 	x.Stats = *stats
 	return &x, err
 }
+
 //13.client_user
 func (ms *dbStorage) getclient_user(email string) (*atium.client_userInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
