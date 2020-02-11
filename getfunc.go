@@ -1,3 +1,44 @@
+package service
+import (
+  "atium/pkg/atium"
+  "database/sql"
+  "encoding/json"
+  "fmt"
+  "_github.com/go-sql-driver/mysql"
+  "string"
+  )
+
+  type dbStorage struct {
+    db *sql.DB
+  }
+
+  func newStore(username, password, host, dbname string) (*dbStorage, error) {
+  	connectString := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", username, password, host, dbname)
+  	db, err := sql.Open("mysql", connectString)
+  	if err == nil {
+  		return &dbStorage{db}, nil
+  	}
+  	return nil, err
+  }
+
+  func (ms *dbStorage) Close() error {
+  	return ms.db.Close()
+  }
+
+
+  func handle(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+  	dbHost := os.Getenv("RDS_HOST")
+  	dbUser := os.Getenv("RDS_USER")
+  	dbPass := os.Getenv("RDS_PASSWORD")
+  	dbName := os.Getenv("RDS_DB_NAME")
+  	// AWS Credentials not required to im
+  	var err error
+  	db, err := newStore(dbUser, dbPass, dbHost, dbName)
+  	if err == nil {
+  		c.DB = db
+  	}
+  	defer c.DB.Close()
+
 // 1.User
 func (ms *dbStorage) getUser(name string) (*atium.UserInfo, error) {
 	qs := fmt.Sprintf("%s %s %s %s",
@@ -465,3 +506,8 @@ func (ms *dbStorage) getuser_stats(user_id string) (*atium.user_statsInfo, error
 	x.Stats = *stats
 	return &x, err
 }
+
+	  func main(){
+  lambda.Start(handle)
+}
+	  
